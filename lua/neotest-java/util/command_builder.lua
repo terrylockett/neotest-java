@@ -1,5 +1,5 @@
 local ProjectType = {
-	gradle = { name = "gradle", wrapper = "./gradlew", global_binary = "gradle" },
+	gradle = { name = "gradle", wrapper = "/gradlew", global_binary = "gradle" },
 	maven = { name = "maven", wrapper = "./mvnw", global_binary = "mvn" },
 }
 
@@ -15,6 +15,7 @@ local CommandBuilder = {
 	--- @return CommandBuilder
 	new = function(self)
 		self.__index = self
+		self._wrapper_root = "."
 		return setmetatable({}, self)
 	end,
 
@@ -48,6 +49,11 @@ local CommandBuilder = {
 
 	ignore_wrapper = function(self, ignore_wrapper)
 		self._ignore_wrapper = ignore_wrapper
+		return self
+	end,
+
+	wrapper_root = function(self, wrapper_root)
+		self.wrapper_root = wrapper_root
 		return self
 	end,
 
@@ -106,7 +112,7 @@ local CommandBuilder = {
 		if self._ignore_wrapper then
 			table.insert(command, self._project_type.global_binary)
 		else
-			table.insert(command, self._project_type.wrapper)
+			table.insert(command, self.wrapper_root .. self._project_type.wrapper)
 		end
 
 		if MAVEN == self._project_type.name and self:contains_integration_tests() then

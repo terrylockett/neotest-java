@@ -11,7 +11,17 @@ function SpecBuilder.build_spec(args, project_type, ignore_wrapper)
 	local command = CommandBuilder:new()
 	local position = args.tree:data()
 	local root = root_finder.find_root(position.path)
+	
+	local module_root = root_finder.find_root(position.path)
+	local repo_root = module_root
+	if not ignore_wrapper then
+		repo_root = root_finder.find_repo_root(position.path)
+		command:wrapper_root(repo_root)
+	end
+
 	local absolute_path = position.path
+
+	-- todo
 
 	if position.type == "dir" then
 		local test_class_names = {}
@@ -30,6 +40,8 @@ function SpecBuilder.build_spec(args, project_type, ignore_wrapper)
 
 		command:project_type(project_type)
 		command:ignore_wrapper(ignore_wrapper)
+
+		print("Running command: " .. command:build())
 
 		return {
 			command = command:build(),
@@ -66,7 +78,7 @@ function SpecBuilder.build_spec(args, project_type, ignore_wrapper)
 	end
 
 	-- TODO: add debug logger
-	-- print("Running command: " .. command)
+	print("Running command: " .. command:build())
 
 	return {
 		command = command:build(),

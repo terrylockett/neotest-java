@@ -62,14 +62,16 @@ function NeotestJavaAdapter.build_spec(args)
 
 	-- find root
 	local root = self.root(args.tree:data().path)
+	local module_root = root_finder.find_module_root(args.tree:data().path)
+	local repo_root = root_finder.find_repo_root(args.tree:data().path)
 
 	-- detect project type
-	self.project_type = detect_project_type(root)
+	self.project_type = detect_project_type(module_root)
 
 	-- decide to ignore wrapper or not
 	local ignore_wrapper = self.config.ignore_wrapper
 	if not ignore_wrapper then
-		ignore_wrapper = not there_is_wrapper_in(root)
+		ignore_wrapper = not there_is_wrapper_in(repo_root)
 	end
 
 	-- build spec
