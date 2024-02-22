@@ -1,0 +1,4 @@
+rootProject.name = 'project1'
+
+include("subproject1")
+include("subproject2")

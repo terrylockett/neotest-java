@@ -60,8 +60,7 @@ function NeotestJavaAdapter.build_spec(args)
 	-- TODO: find a way to avoid to make this steps every time
 	local self = NeotestJavaAdapter
 
-	-- find root
-	local root = self.root(args.tree:data().path)
+	-- find module path and repo root
 	local module_root = root_finder.find_module_root(args.tree:data().path)
 	local repo_root = root_finder.find_repo_root(args.tree:data().path)
 
